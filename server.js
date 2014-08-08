@@ -13,7 +13,8 @@ app.use(morgan('combined'));
 app.set('views', __dirname + '/app/views');
 app.engine('hbs', exphbs({
   defaultLayout: __dirname + '/app/views/layouts/default',
-  extname: '.hbs'
+  extname: '.hbs',
+  partialsDir: __dirname + '/app/views/partials'
 }));
 app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/public'));
@@ -28,9 +29,12 @@ app.get('/:year/:month', function(req, res) {
   var date = moment([year, month]);
 
   if (date.isValid()) {
-    var sections = config.get('sections').map(_.extend.bind(_, {}));
+    var sections = config.get('sections').map(function(section) {
+      return _.extend({}, section);
+    });
     var unassigned = [];
 
+    // Get the bookmarks for this month
     BookmarkSvc.getByMonth(month, function(err, bookmarks) {
       bookmarks.forEach(function(bm) {
         var matched = false;
@@ -48,8 +52,12 @@ app.get('/:year/:month', function(req, res) {
 
               sec.bookmarks.push(bm);
               matched = true;
-              return false;
+              break;
             }
+          }
+
+          if (matched) {
+            break;
           }
         }
 
@@ -58,10 +66,17 @@ app.get('/:year/:month', function(req, res) {
         }
       });
 
+      // Toss on the unassigned section for easier formatting
+      sections.push({
+        title: 'Unassigned',
+        bookmarks: unassigned
+      });
+
       res.render('month', {
         pageTitle: 'Links for ' + date.format('MMMM') + ', ' + year,
-        sections: sections,
-        unassigned: unassigned
+        month: date.format('MMMM'),
+        year: date.year(),
+        sections: sections
       });
     });
   } else {

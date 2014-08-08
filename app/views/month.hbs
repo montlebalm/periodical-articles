@@ -1,40 +1,22 @@
-{{#each sections}}
-<section>
-  <h1>{{title}}</h1>
-  <ul>
-    {{#each bookmarks}}
-    <li>
-      <a href="{{url}}" target="_blank">{{title}}</a>
-      {{#if description}}
-      <p>{{description}}</p>
-      {{/if}}
-      <span>{{datetime}}</span>
-      <ul>
-        {{#each tags}}
-        <li>{{this}}</li>
-        {{/each}}
-      </ul>
-    </li>
+<div class="row">
+  <section class="page-month col-xs-6 col-xs-offset-3">
+    <header>
+      <h1 class="title">Quick Links for {{month}}, {{year}}</h1>
+    </header>
+    {{#each sections}}
+      <section class="link-section">
+        <h1 class="title">{{title}}</h1>
+        <ul class="link-section-links list-unstyled">
+          {{#each bookmarks}}
+            <li class="link">
+              <a href="{{url}}" target="_blank">{{title}}</a>
+              {{#if description}}
+                <p class="link-description">{{description}}</p>
+              {{/if}}
+            </li>
+          {{/each}}
+        </ul>
+      </section>
     {{/each}}
-  </ul>
-</section>
-{{/each}}
-<section>
-  <h1>Unassigned</h1>
-  <ul>
-    {{#each unassigned}}
-    <li>
-      <a href="{{url}}" target="_blank">{{title}}</a>
-      {{#if description}}
-      <p>{{description}}</p>
-      {{/if}}
-      <span>{{datetime}}</span>
-      <ul>
-        {{#each tags}}
-        <li>{{this}}</li>
-        {{/each}}
-      </ul>
-    </li>
-    {{/each}}
-  </ul>
-</section>
+  </section>
+</div>

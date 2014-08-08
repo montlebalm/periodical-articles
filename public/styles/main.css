@@ -1,0 +1,36 @@
+#page-content {
+  margin-top: 30px;
+}
+
+.page-month {}
+
+  .page-month header {
+    margin-bottom: 30px;
+  }
+
+    .page-month header .title {
+      text-align: center;
+    }
+
+.link-section {
+  font-size: 1.2em;
+}
+
+  .link-section + .link-section {
+    margin-top: 30px;
+  }
+
+  .link-section .link {
+    margin-top: 15px;
+  }
+
+  .link-section .title {
+    font-size: 1.5em;
+    margin: 0;
+  }
+
+  .link-section .link-description {
+    margin: 0;
+  }
+
+
