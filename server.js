@@ -26,11 +26,11 @@ app.get('/', function(req, res) {
 app.get('/:year/:month', function(req, res) {
   var year = req.param('year');
   var month = req.param('month');
-  var date = moment([year, month]);
+  var date = moment([year, month - 1]);
 
   if (date.isValid()) {
     var sections = config.get('sections').map(function(section) {
-      return _.extend({}, section);
+      return _.extend({ bookmarks: [] }, section);
     });
     var unassigned = [];
 
@@ -70,6 +70,11 @@ app.get('/:year/:month', function(req, res) {
       sections.push({
         title: 'Unassigned',
         bookmarks: unassigned
+      });
+
+      // Remove sections without links
+      sections = sections.filter(function(section) {
+        return section.bookmarks && section.bookmarks.length;
       });
 
       res.render('month', {

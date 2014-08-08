@@ -1,13 +1,13 @@
 'use strict';
 
-var async = require('async');
+var _ = require('underscore');
 var config = require('config');
 var request = require('request');
-var moment = require('moment');
 
 var baseUrl = config.get('pinboard.base_url');
 var user = process.env.PINBOARD_USER || config.get('pinboard.user');
 var apiKey = process.env.PINBOARD_TOKEN || config.get('pinboard.api_key');
+var requiredTags = config.get('required_tags');
 
 function _getUrl(suffix) {
   var delim = (suffix.indexOf('?') === -1) ? '?' : '&';
@@ -30,7 +30,12 @@ function getAllPosts(callback) {
       return callback(err);
     }
 
-    callback(null, JSON.parse(body));
+    // Make sure every returned post has the required tag(s)
+    var posts = JSON.parse(body).map(_deriveBookmark).filter(function(bookmark) {
+      return _.intersection(requiredTags, bookmark.tags).length > 0;
+    });
+
+    callback(null, posts);
   });
 }
 
@@ -41,7 +46,8 @@ module.exports = {
         return callback(err);
       }
 
-      var filtered = data.map(_deriveBookmark).filter(function(b) {
+      // Filter based on month
+      var filtered = data.filter(function(b) {
         return b.timestamp.getMonth() + 1 == month;
       });
 

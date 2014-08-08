@@ -4,6 +4,7 @@
     "user": "",
     "api_key": ""
   },
+  "required_tags": ["quicklinks"],
   "sections": [{
     "title": "Design",
     "tags": ["design"]
