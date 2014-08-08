@@ -6,6 +6,12 @@
   },
   "required_tags": ["quicklinks"],
   "sections": [{
+    "title": "Quick Left",
+    "tags": ["quickleft"]
+  }, {
+    "title": "JavaScript",
+    "tags": ["javascript"]
+  }, {
     "title": "Design",
     "tags": ["design"]
   }]
