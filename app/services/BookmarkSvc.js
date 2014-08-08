@@ -6,8 +6,8 @@ var request = require('request');
 var moment = require('moment');
 
 var baseUrl = config.get('pinboard.base_url');
-var user = config.get('pinboard.user');
-var apiKey = config.get('pinboard.api_key');
+var user = process.env.PINBOARD_USER || config.get('pinboard.user');
+var apiKey = process.env.PINBOARD_TOKEN || config.get('pinboard.api_key');
 
 function _getUrl(suffix) {
   var delim = (suffix.indexOf('?') === -1) ? '?' : '&';
