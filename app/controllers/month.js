@@ -21,13 +21,18 @@ module.exports = {
 
       BookmarkSvc.getByMonth(month, function(err, bookmarks) {
         // Assign bookmarks to categories by tags
-        bookmarks.forEach(function(bm) {
+        for (var i = 0; i < bookmarks.length; i++) {
+          var bm = bookmarks[i];
+
           categories.forEach(function(cat) {
             if (_.intersection(bm.tags, cat.tags).length > 0) {
               cat.bookmarks.push(bm);
+              // Pull the bookmark out of the list
+              // This enforces a pseudo "priority" system
+              bookmarks.splice(i--, 1);
             }
           });
-        });
+        }
 
         // Toss on the unassigned section for easier formatting
         categories.push({
