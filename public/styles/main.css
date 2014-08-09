@@ -7,6 +7,13 @@
   }
 
     .page-month header .title {
+      margin: 0;
+      text-align: center;
+    }
+
+    .page-month header .subtitle {
+      font-size: 1.5em;
+      margin: 0;
       text-align: center;
     }
 
