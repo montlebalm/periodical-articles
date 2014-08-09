@@ -5,12 +5,15 @@
     "api_key": ""
   },
   "required_tags": ["quicklinks"],
-  "sections": [{
+  "categories": [{
     "title": "Quick Left",
-    "tags": ["quickleft"]
+    "tags": ["quickleft", "quicklefters"]
   }, {
     "title": "JavaScript",
     "tags": ["javascript"]
+  }, {
+    "title": "Ruby",
+    "tags": ["ruby"]
   }, {
     "title": "Design",
     "tags": ["design"]

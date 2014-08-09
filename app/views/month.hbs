@@ -3,10 +3,10 @@
     <header>
       <h1 class="title">Quick Links for {{month}}, {{year}}</h1>
     </header>
-    {{#each sections}}
-      <section class="link-section">
+    {{#each categories}}
+      <section class="link-category">
         <h1 class="title">{{title}}</h1>
-        <ul class="link-section-links list-unstyled">
+        <ul class="link-category-links list-unstyled">
           {{#each bookmarks}}
             <li class="link">
               <a href="{{url}}" target="_blank">{{title}}</a>

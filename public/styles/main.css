@@ -12,24 +12,24 @@
       text-align: center;
     }
 
-.link-section {
+.link-category {
   font-size: 1.2em;
 }
 
-  .link-section + .link-section {
+  .link-category + .link-category {
     margin-top: 30px;
   }
 
-  .link-section .link {
+  .link-category .link {
     margin-top: 15px;
   }
 
-  .link-section .title {
+  .link-category .title {
     font-size: 1.5em;
     margin: 0;
   }
 
-  .link-section .link-description {
+  .link-category .link-description {
     margin: 0;
   }
 

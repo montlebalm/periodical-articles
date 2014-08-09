@@ -1,5 +1,3 @@
-'use strict';
-
 var _ = require('underscore');
 var config = require('config');
 var request = require('request');
