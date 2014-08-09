@@ -29,9 +29,13 @@ function getAllPosts(callback) {
     }
 
     // Make sure every returned post has the required tag(s)
-    var posts = JSON.parse(body).map(_deriveBookmark).filter(function(bookmark) {
-      return _.intersection(requiredTags, bookmark.tags).length > 0;
-    });
+    var posts = JSON.parse(body).map(_deriveBookmark);
+
+    if (requiredTags.length) {
+      posts = posts.filter(function(bookmark) {
+        return _.intersection(requiredTags, bookmark.tags).length > 0;
+      });
+    }
 
     callback(null, posts);
   });

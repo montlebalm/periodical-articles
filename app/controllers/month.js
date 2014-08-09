@@ -17,27 +17,23 @@ module.exports = {
 
     if (date.isValid()) {
       var categories = _getCategories();
-      var unassigned = [];
 
       BookmarkSvc.getByMonth(month, function(err, bookmarks) {
-        // Assign bookmarks to categories by tags
-        for (var i = 0; i < bookmarks.length; i++) {
-          var bm = bookmarks[i];
-
-          categories.forEach(function(cat) {
-            if (_.intersection(bm.tags, cat.tags).length > 0) {
-              cat.bookmarks.push(bm);
+        categories.forEach(function(category) {
+          for (var i = 0; i < bookmarks.length; i++) {
+            if (_.intersection(bookmarks[i].tags, category.tags).length > 0) {
+              category.bookmarks.push(bookmarks[i]);
               // Pull the bookmark out of the list
               // This enforces a pseudo "priority" system
               bookmarks.splice(i--, 1);
             }
-          });
-        }
+          }
+        });
 
         // Toss on the unassigned section for easier formatting
         categories.push({
-          title: 'Unassigned',
-          bookmarks: unassigned
+          title: 'Everything else',
+          bookmarks: bookmarks
         });
 
         // Remove categories without links
@@ -45,12 +41,18 @@ module.exports = {
           return section.bookmarks && section.bookmarks.length;
         });
 
-        res.render('month', {
-          pageTitle: 'Links for ' + date.format('MMMM') + ', ' + year,
-          month: date.format('MMMM'),
-          year: date.year(),
-          categories: categories
-        });
+        if (categories.length) {
+          res.render('month', {
+            pageTitle: 'Links for ' + date.format('MMMM') + ', ' + year,
+            month: date.format('MMMM'),
+            year: date.year(),
+            categories: categories
+          });
+        } else {
+          res.render('empty', {
+            pageTitle: 'Nothing!'
+          });
+        }
       });
     } else {
       res.send(404);
