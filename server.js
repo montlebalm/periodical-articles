@@ -19,6 +19,24 @@ app.use(express.static(__dirname + '/public'));
 // Routes
 app.get('/', HomeController.index);
 app.get('/:year/:month', MonthController.index);
+app.use(function(req, res, next){
+  res.status(404);
+
+  // respond with html page
+  if (req.accepts('html')) {
+    return res.render('404', {
+      pageTitle: 'Not found'
+    });
+  }
+
+  // respond with json
+  if (req.accepts('json')) {
+    return res.send({ error: 'Not found' });
+  }
+
+  // default to plain-text. send()
+  res.type('txt').send('Not found');
+});
 
 // Start server
 var port = Number(process.env.PORT || 8080);
