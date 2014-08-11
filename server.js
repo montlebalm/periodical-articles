@@ -3,6 +3,7 @@ var morgan = require('morgan');
 var exphbs = require('express3-handlebars');
 var HomeController = require('./app/controllers/home');
 var MonthController = require('./app/controllers/month');
+var WeekController = require('./app/controllers/week');
 
 // Init and configure app
 var app = express();
@@ -18,6 +19,7 @@ app.use(express.static(__dirname + '/public'));
 
 // Routes
 app.get('/', HomeController.index);
+app.get('/week', WeekController.index);
 app.get('/:year/:month', MonthController.index);
 app.use(function(req, res, next){
   res.status(404);
