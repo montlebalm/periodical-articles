@@ -48,9 +48,33 @@ function _getPostsForMonth(year, month, callback) {
   });
 }
 
+function _hasPostsInMonth(year, month, callback) {
+  request(_getUrl('posts/dates'), function(err, res, body) {
+    if (err) {
+      return callback(err);
+    }
+
+    year = parseInt(year);
+    month = parseInt(month) + 1;
+
+    for (var date in JSON.parse(body).dates) {
+      var parts = date.split('-');
+
+      if (parts.length === 3 && parseInt(parts[0]) == year && parseInt(parts[1]) == month) {
+        return callback(null, true);
+      }
+    }
+
+    return callback(null, false);
+  });
+}
+
 module.exports = {
   getByMonth: function(year, month, callback) {
     _getPostsForMonth(year, month, callback);
+  },
+  hasPostsInMonth: function(year, month, callback) {
+    _hasPostsInMonth(year, month, callback);
   }
 };
 
