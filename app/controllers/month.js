@@ -18,7 +18,7 @@ module.exports = {
     if (date.isValid()) {
       var categories = _getCategories();
 
-      BookmarkSvc.getByMonth(month, function(err, bookmarks) {
+      BookmarkSvc.getByMonth(year, month, function(err, bookmarks) {
         categories.forEach(function(category) {
           for (var i = 0; i < bookmarks.length; i++) {
             if (_.intersection(bookmarks[i].tags, category.tags).length > 0) {

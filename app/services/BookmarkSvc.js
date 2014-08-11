@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var config = require('config');
+var moment = require('moment');
 var request = require('request');
 
 var baseUrl = config.get('pinboard.base_url');
@@ -22,8 +23,14 @@ function _deriveBookmark(raw) {
   };
 }
 
-function getAllPosts(callback) {
-  request(_getUrl('posts/all'), function(err, res, body) {
+function _getPostsForMonth(year, month, callback) {
+  request({
+    url: _getUrl('posts/all'),
+    qs: {
+      fromdt: moment([year, month - 1]).toDate(),
+      todt: moment([year, month]).subtract('days', 1).toDate()
+    }
+  }, function(err, res, body) {
     if (err) {
       return callback(err);
     }
@@ -42,19 +49,8 @@ function getAllPosts(callback) {
 }
 
 module.exports = {
-  getByMonth: function(month, callback) {
-    getAllPosts(function(err, data) {
-      if (err) {
-        return callback(err);
-      }
-
-      // Filter based on month
-      var filtered = data.filter(function(b) {
-        return b.timestamp.getMonth() + 1 == month;
-      });
-
-      callback(null, filtered);
-    });
+  getByMonth: function(year, month, callback) {
+    _getPostsForMonth(year, month, callback);
   }
 };
 
