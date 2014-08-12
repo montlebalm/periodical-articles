@@ -23,12 +23,12 @@ function _deriveBookmark(raw) {
   };
 }
 
-function _getPostsForMonth(year, month, callback) {
+function _getPostsForDateRange(startOf, endOf, callback) {
   request({
     url: _getUrl('posts/all'),
     qs: {
-      fromdt: moment([year, month - 1]).toDate(),
-      todt: moment([year, month]).subtract('days', 1).toDate()
+      fromdt: startOf,
+      todt: endOf
     }
   }, function(err, res, body) {
     if (err) {
@@ -46,6 +46,7 @@ function _getPostsForMonth(year, month, callback) {
 
     callback(null, posts);
   });
+
 }
 
 function _hasPostsInMonth(year, month, callback) {
@@ -69,12 +70,38 @@ function _hasPostsInMonth(year, month, callback) {
   });
 }
 
+function _groupBookmarksByCategory(bookmarks, categories){
+  var bookmarksCopy = bookmarks.map(_.extend.bind(_, {}));
+  var categoriesCopy = categories.map(_.extend.bind(_, {}));
+
+  categoriesCopy.forEach(function(category) {
+    for (var i = 0; i < bookmarksCopy.length; i++) {
+      if (_.intersection(bookmarksCopy[i].tags, category.tags).length > 0) {
+        category.bookmarks.push(bookmarksCopy[i]);
+        // Pull the bookmark out of the list
+        // This enforces a pseudo "priority" system
+        bookmarksCopy.splice(i--, 1);
+      }
+    }
+  });
+
+  categoriesCopy.push({
+    title: 'Everything else',
+    bookmarks: bookmarksCopy
+  });
+
+  return categoriesCopy;
+}
+
 module.exports = {
-  getByMonth: function(year, month, callback) {
-    _getPostsForMonth(year, month, callback);
-  },
   hasPostsInMonth: function(year, month, callback) {
     _hasPostsInMonth(year, month, callback);
+  },
+  getPostsForDateRange: function(startOf, endOf, callback) {
+    _getPostsForDateRange(startOf, endOf, callback);
+  },
+  groupBookmarksByCategory: function(bookmarks, categories, callback) {
+    callback(null, _groupBookmarksByCategory(bookmarks, categories));
   }
 };
 

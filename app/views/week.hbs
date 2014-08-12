@@ -1,0 +1,26 @@
+<div class="row">
+  <section class="page-month col-xs-8 col-xs-offset-2">
+    <header>
+      <h1 class="title">Quick Links</h1>
+      <h2 class="subtitle">{{start}} to {{end}}</h2>
+    </header>
+    {{#each categories}}
+    <section class="link-category">
+      <h1 class="title">{{title}}</h1>
+      <ul class="link-category-links list-unstyled">
+        {{#each bookmarks}}
+        <li class="link">
+        <a href="{{url}}" target="_blank">{{title}}</a>
+        {{#if description}}
+        <p class="link-description">{{description}}</p>
+        {{/if}}
+        </li>
+        {{/each}}
+      </ul>
+    </section>
+    {{/each}}
+    <footer class="page-footer">
+    </footer>
+  </section>
+</div>
+
