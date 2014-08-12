@@ -18,40 +18,24 @@ module.exports = {
     var startOfWeek = moment().startOf('week');
     var endOfWeek = moment().endOf('week');
 
-
     async.parallel({
-      bookmarks: function(next) {
-        BookmarkSvc.getPostsForDateRange(startOfWeek.toDate(), endOfWeek.toDate(), next);
+      categories: function(next) {
+        BookmarkSvc.getPostsForDateRange(startOfWeek.toDate(), endOfWeek.toDate(), function(err, bookmarks) {
+          BookmarkSvc.groupBookmarksByCategory(bookmarks, categories, next);
+        });
       }
     }, function(err, results) {
-
-        categories.forEach(function(category) {
-          for (var i = 0; i < results.bookmarks.length; i++) {
-            if (_.intersection(results.bookmarks[i].tags, category.tags).length > 0) {
-              category.bookmarks.push(results.bookmarks[i]);
-              // Pull the bookmark out of the list
-              // This enforces a pseudo "priority" system
-              results.bookmarks.splice(i--, 1);
-            }
-          }
-        });
-
-        categories.push({
-          title: 'Everything else',
-          bookmarks: results.bookmarks
-        });
-
-        categories = categories.filter(function(section) {
+        var finalCategories = results.categories.filter(function(section) {
           return section.bookmarks && section.bookmarks.length;
         });
 
-        if (categories.length) {
+        if (finalCategories.length) {
           res.render('week', {
             pageTitle: "This Week in Links",
             start: startOfWeek.format("MMM Do YYYY"),
             end: endOfWeek.format("MMM Do YYYY"),
             bookmarks: results.bookmarks,
-            categories: categories
+            categories: finalCategories
           });
         }
     });

@@ -34,39 +34,21 @@ module.exports = {
         hasPostsNextMonth: function(next) {
           BookmarkSvc.hasPostsInMonth(nextMonthDate.year(), nextMonthDate.month(), next);
         },
-        bookmarks: function(next) {
+        categories: function(next) {
           var startDate = moment(date).startOf('month');
           var endDate = moment(date).endOf('month');
-          BookmarkSvc.getPostsForDateRange(startDate.toDate(), endDate.toDate(), next);
+          BookmarkSvc.getPostsForDateRange(startDate.toDate(), endDate.toDate(), function(err, bookmarks) {
+            BookmarkSvc.groupBookmarksByCategory(bookmarks, categories, next);
+          });
         }
       }, function(err, results) {
         var lastMonthUrl = (results.hasPostsLastMonth) ? _getPageUrl(lastMonthDate.year(), lastMonthDate.month()) : null;
         var nextMonthUrl = (results.hasPostsNextMonth) ? _getPageUrl(nextMonthDate.year(), nextMonthDate.month()) : null;
-
-        // Group bookmarks under categories
-        categories.forEach(function(category) {
-          for (var i = 0; i < results.bookmarks.length; i++) {
-            if (_.intersection(results.bookmarks[i].tags, category.tags).length > 0) {
-              category.bookmarks.push(results.bookmarks[i]);
-              // Pull the bookmark out of the list
-              // This enforces a pseudo "priority" system
-              results.bookmarks.splice(i--, 1);
-            }
-          }
-        });
-
-        // Toss on the unassigned section for easier formatting
-        categories.push({
-          title: 'Everything else',
-          bookmarks: results.bookmarks
-        });
-
-        // Remove categories without links
-        categories = categories.filter(function(section) {
+        var finalCategories = results.categories.filter(function(section) {
           return section.bookmarks && section.bookmarks.length;
         });
 
-        if (categories.length) {
+        if (finalCategories.length) {
           res.render('month', {
             pageTitle: 'Links for ' + date.format('MMMM') + ', ' + year,
             archiveUrl: 'https://pinboard.in/u:' + user,
@@ -74,7 +56,7 @@ module.exports = {
             nextMonthUrl: nextMonthUrl,
             month: date.format('MMMM'),
             year: date.year(),
-            categories: categories
+            categories: finalCategories
           });
         } else {
           res.render('empty', {

@@ -70,12 +70,35 @@ function _hasPostsInMonth(year, month, callback) {
   });
 }
 
+function _groupBookmarksByCategory(bookmarks, categories){
+  categories.forEach(function(category) {
+    for (var i = 0; i < bookmarks.length; i++) {
+      if (_.intersection(bookmarks[i].tags, category.tags).length > 0) {
+        category.bookmarks.push(bookmarks[i]);
+        // Pull the bookmark out of the list
+        // This enforces a pseudo "priority" system
+        bookmarks.splice(i--, 1);
+      }
+    }
+  });
+
+  categories.push({
+    title: 'Everything else',
+    bookmarks: bookmarks
+  });
+
+  return categories;
+}
+
 module.exports = {
   hasPostsInMonth: function(year, month, callback) {
     _hasPostsInMonth(year, month, callback);
   },
-    getPostsForDateRange: function(startOf, endOf, callback) {
-      _getPostsForDateRange(startOf, endOf, callback);
+  getPostsForDateRange: function(startOf, endOf, callback) {
+    _getPostsForDateRange(startOf, endOf, callback);
+  },
+  groupBookmarksByCategory: function(bookmarks, categories, callback) {
+    callback(null, _groupBookmarksByCategory(bookmarks, categories));
   }
 };
 
