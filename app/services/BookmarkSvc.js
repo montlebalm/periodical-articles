@@ -23,12 +23,12 @@ function _deriveBookmark(raw) {
   };
 }
 
-function _getPostsForWeek(start, finish, callback) {
+function _getPostsForDateRange(startOf, endOf, callback) {
   request({
     url: _getUrl('posts/all'),
     qs: {
-      fromdt: moment(start).toDate(),
-      todt: moment(finish).toDate()
+      fromdt: startOf,
+      todt: endOf
     }
   }, function(err, res, body) {
     if (err) {
@@ -47,31 +47,6 @@ function _getPostsForWeek(start, finish, callback) {
     callback(null, posts);
   });
 
-}
-
-function _getPostsForMonth(year, month, callback) {
-  request({
-    url: _getUrl('posts/all'),
-    qs: {
-      fromdt: moment([year, month - 1]).toDate(),
-      todt: moment([year, month]).subtract('days', 1).toDate()
-    }
-  }, function(err, res, body) {
-    if (err) {
-      return callback(err);
-    }
-
-    // Make sure every returned post has the required tag(s)
-    var posts = JSON.parse(body).map(_deriveBookmark);
-
-    if (requiredTags.length) {
-      posts = posts.filter(function(bookmark) {
-        return _.intersection(requiredTags, bookmark.tags).length > 0;
-      });
-    }
-
-    callback(null, posts);
-  });
 }
 
 function _hasPostsInMonth(year, month, callback) {
@@ -96,14 +71,11 @@ function _hasPostsInMonth(year, month, callback) {
 }
 
 module.exports = {
-  getByMonth: function(year, month, callback) {
-    _getPostsForMonth(year, month, callback);
-  },
   hasPostsInMonth: function(year, month, callback) {
     _hasPostsInMonth(year, month, callback);
   },
-    getPostsForWeek: function(start, end, callback) {
-    _getPostsForWeek(start, end, callback);
+    getPostsForDateRange: function(startOf, endOf, callback) {
+      _getPostsForDateRange(startOf, endOf, callback);
   }
 };
 

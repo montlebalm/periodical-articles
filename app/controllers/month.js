@@ -35,7 +35,9 @@ module.exports = {
           BookmarkSvc.hasPostsInMonth(nextMonthDate.year(), nextMonthDate.month(), next);
         },
         bookmarks: function(next) {
-          BookmarkSvc.getByMonth(year, month, next);
+          var startDate = moment(date).startOf('month');
+          var endDate = moment(date).endOf('month');
+          BookmarkSvc.getPostsForDateRange(startDate.toDate(), endDate.toDate(), next);
         }
       }, function(err, results) {
         var lastMonthUrl = (results.hasPostsLastMonth) ? _getPageUrl(lastMonthDate.year(), lastMonthDate.month()) : null;

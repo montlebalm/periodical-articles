@@ -6,9 +6,6 @@ var BookmarkSvc = require('../services/BookmarkSvc');
 
 var user = process.env.PINBOARD_USER || config.get('pinboard.user');
 
-var startOfWeek = moment().startOf('week');
-var endOfWeek = moment().endOf('week');
-
 function _getCategories() {
   return config.get('categories').map(function(cat) {
     return _.extend({ bookmarks: [] }, cat);
@@ -18,10 +15,13 @@ function _getCategories() {
 module.exports = {
   index: function(req, res) {
     var categories = _getCategories();
+    var startOfWeek = moment().startOf('week');
+    var endOfWeek = moment().endOf('week');
+
 
     async.parallel({
       bookmarks: function(next) {
-        BookmarkSvc.getPostsForWeek(startOfWeek, endOfWeek, next);
+        BookmarkSvc.getPostsForDateRange(startOfWeek.toDate(), endOfWeek.toDate(), next);
       }
     }, function(err, results) {
 
