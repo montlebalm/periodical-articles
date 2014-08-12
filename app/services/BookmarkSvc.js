@@ -23,6 +23,32 @@ function _deriveBookmark(raw) {
   };
 }
 
+function _getPostsForWeek(start, finish, callback) {
+  request({
+    url: _getUrl('posts/all'),
+    qs: {
+      fromdt: moment(start).toDate(),
+      todt: moment(finish).toDate()
+    }
+  }, function(err, res, body) {
+    if (err) {
+      return callback(err);
+    }
+
+    // Make sure every returned post has the required tag(s)
+    var posts = JSON.parse(body).map(_deriveBookmark);
+
+    if (requiredTags.length) {
+      posts = posts.filter(function(bookmark) {
+        return _.intersection(requiredTags, bookmark.tags).length > 0;
+      });
+    }
+
+    callback(null, posts);
+  });
+
+}
+
 function _getPostsForMonth(year, month, callback) {
   request({
     url: _getUrl('posts/all'),
@@ -75,6 +101,9 @@ module.exports = {
   },
   hasPostsInMonth: function(year, month, callback) {
     _hasPostsInMonth(year, month, callback);
+  },
+    getPostsForWeek: function(start, end, callback) {
+    _getPostsForWeek(start, end, callback);
   }
 };
 

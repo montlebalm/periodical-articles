@@ -18,8 +18,7 @@ app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/public'));
 
 // Routes
-app.get('/', HomeController.index);
-app.get('/week', WeekController.index);
+app.get('/', WeekController.index);
 app.get('/:year/:month', MonthController.index);
 app.use(function(req, res, next){
   res.status(404);
