@@ -71,23 +71,26 @@ function _hasPostsInMonth(year, month, callback) {
 }
 
 function _groupBookmarksByCategory(bookmarks, categories){
-  categories.forEach(function(category) {
-    for (var i = 0; i < bookmarks.length; i++) {
-      if (_.intersection(bookmarks[i].tags, category.tags).length > 0) {
-        category.bookmarks.push(bookmarks[i]);
+  var bookmarksCopy = bookmarks.map(_.extend.bind(_, {}));
+  var categoriesCopy = categories.map(_.extend.bind(_, {}));
+
+  categoriesCopy.forEach(function(category) {
+    for (var i = 0; i < bookmarksCopy.length; i++) {
+      if (_.intersection(bookmarksCopy[i].tags, category.tags).length > 0) {
+        category.bookmarks.push(bookmarksCopy[i]);
         // Pull the bookmark out of the list
         // This enforces a pseudo "priority" system
-        bookmarks.splice(i--, 1);
+        bookmarksCopy.splice(i--, 1);
       }
     }
   });
 
-  categories.push({
+  categoriesCopy.push({
     title: 'Everything else',
-    bookmarks: bookmarks
+    bookmarks: bookmarksCopy
   });
 
-  return categories;
+  return categoriesCopy;
 }
 
 module.exports = {
