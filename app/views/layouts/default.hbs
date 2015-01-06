@@ -7,9 +7,33 @@
     <link rel="stylesheet" href="/styles/main.css" />
   </head>
   <body>
-    <div id="page-content" class="container">
+    <header id="site-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-4 col-xs-offset-2">
+            <h1 class="logo"></h1>
+          </div>
+          <div class="col-xs-4">
+            <nav class="nav">
+              <a href="{{archiveUrl}}">Archive</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="page-content container">
       {{{body}}}
     </div>
+    <footer id="site-footer" class="container">
+      <div class="row">
+        <div class="col-xs-offset-2 col-xs-4">
+          <p class="copy">© 2008-2014 Quick Left Inc</p>
+        </div>
+        <div class="col-xs-4">
+          <p class="sign-off">Made with love <a href="https://twitter.com/quickleft">@quickleft</a></p>
+        </div>
+      </div>
+    </footer>
+    <script src="/assets/application-b043c67da89d1197e215bbe4ec350fff.js" type="text/javascript"></script>
   </body>
 </html>
-

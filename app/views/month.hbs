@@ -1,32 +1,47 @@
-<div class="row">
-  <section class="page-month col-xs-8 col-xs-offset-2">
-    <header>
-      <h1 class="title">Quick Links</h1>
-      <h2 class="subtitle">{{month}}, {{year}}</h1>
+<div class="page-month">
+  <div class="row">
+    <header class="col-xs-8 col-xs-offset-2">
+      <span class="title">Quick Links</span>
+      <span class="subtitle">for {{month}}, {{year}}</span>
     </header>
-    {{#each categories}}
-      <section class="link-category">
-        <h1 class="title">{{title}}</h1>
-        <ul class="link-category-links list-unstyled">
-          {{#each bookmarks}}
-            <li class="link">
-              <a href="{{url}}" target="_blank">{{title}}</a>
-              {{#if description}}
-                <p class="link-description">{{description}}</p>
-              {{/if}}
-            </li>
-          {{/each}}
-        </ul>
-      </section>
-    {{/each}}
-    <footer class="page-footer">
+  </div>
+  {{#each categories}}
+    <section class="section row">
+      <div class="col-xs-2 section-wrapper">
+        <div class="section-positioner clearfix">
+          <div class="section-snuggler">
+            <span class="section-title">{{title}}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="row">
+      <div class="col-xs-8 col-xs-offset-2">
+        <section class="link-category">
+          <ul class="link-category-links list-unstyled">
+            {{#each bookmarks}}
+              <li class="link">
+                <a href="{{url}}" target="_blank">{{title}}</a>
+                {{#if description}}
+                  <span class="link-description">- {{description}}</span>
+                {{/if}}
+              </li>
+            {{/each}}
+          </ul>
+        </section>
+      </div>
+    </div>
+  {{/each}}
+  <footer class="page-footer row">
+    <div class="col-xs-4 col-xs-offset-2">
       {{#if lastMonthUrl}}
         <a href="{{lastMonthUrl}}" class="pull-left">Last month</a>
       {{/if}}
-      <a href="{{archiveUrl}}">Archive</a>
+    </div>
+    <div class="col-xs-4">
       {{#if nextMonthUrl}}
         <a href="{{nextMonthUrl}}" class="pull-right">Next month</a>
       {{/if}}
-    </footer>
-  </section>
+    </div>
+  </footer>
 </div>

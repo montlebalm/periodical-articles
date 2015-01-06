@@ -69,6 +69,31 @@ function _hasPostsInMonth(year, month, callback) {
   });
 }
 
+function _groupBookmarksByCategory(bookmarks, categories){
+  var bookmarksCopy = bookmarks.slice();
+  var categoriesCopy = categories.map(function(c) {
+    return _.extend({}, c);
+  });
+
+  categoriesCopy.forEach(function(category) {
+    for (var i = 0; i < bookmarksCopy.length; i++) {
+      if (_.intersection(bookmarksCopy[i].tags, category.tags).length > 0) {
+        category.bookmarks.push(bookmarksCopy[i]);
+        // Pull the bookmark out of the list
+        // This enforces a pseudo "priority" system
+        bookmarksCopy.splice(i--, 1);
+      }
+    }
+  });
+
+  categoriesCopy.push({
+    title: 'Everything else',
+    bookmarks: bookmarksCopy
+  });
+
+  return categoriesCopy;
+}
+
 module.exports = {
   getByMonth: function(year, month, callback) {
     _getPostsForMonth(year, month, callback);
@@ -77,4 +102,3 @@ module.exports = {
     _hasPostsInMonth(year, month, callback);
   }
 };
-

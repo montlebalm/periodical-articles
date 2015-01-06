@@ -1,12 +1,13 @@
+var bunyan = require('express-bunyan-logger');
 var express = require('express');
-var morgan = require('morgan');
 var exphbs = require('express3-handlebars');
-var HomeController = require('./app/controllers/home');
-var MonthController = require('./app/controllers/month');
+var homeController = require('./app/controllers/home');
+var monthController = require('./app/controllers/month');
+var errorController = require('./app/controllers/error');
 
-// Init and configure app
+// Configure app
 var app = express();
-app.use(morgan('combined'));
+app.use(bunyan({ name: 'quick-links', level: 'info' }));
 app.set('views', __dirname + '/app/views');
 app.engine('hbs', exphbs({
   defaultLayout: __dirname + '/app/views/layouts/default',
@@ -16,31 +17,13 @@ app.engine('hbs', exphbs({
 app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/public'));
 
-// Routes
-app.get('/', HomeController.index);
-app.get('/:year/:month', MonthController.index);
-app.use(function(req, res, next){
-  res.status(404);
-
-  // respond with html page
-  if (req.accepts('html')) {
-    return res.render('404', {
-      pageTitle: 'Not found'
-    });
-  }
-
-  // respond with json
-  if (req.accepts('json')) {
-    return res.send({ error: 'Not found' });
-  }
-
-  // default to plain-text. send()
-  res.type('txt').send('Not found');
-});
+// Add routes
+app.get('/', homeController.index);
+app.get('/:year/month/:month', monthController.index);
+app.use(errorController.index);
 
 // Start server
 var port = Number(process.env.PORT || 8080);
 var server = app.listen(port, function() {
   console.log('Listening on port %d', server.address().port);
 });
-
